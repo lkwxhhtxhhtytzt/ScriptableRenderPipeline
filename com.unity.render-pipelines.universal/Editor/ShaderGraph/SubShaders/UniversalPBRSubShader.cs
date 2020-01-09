@@ -481,6 +481,8 @@ namespace UnityEditor.Rendering.Universal
             subShader.Deindent();
             subShader.AddShaderChunk("}", true);
 
+            subShader.AddShaderChunk(@"CustomEditor ""UnityEditor.ShaderGraph.PBRMasterGUI""");
+
             return subShader.GetShaderString(0);
         }
 
