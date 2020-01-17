@@ -1231,13 +1231,13 @@ namespace UnityEditor.Rendering.HighDefinition
             collector.AddIntProperty("_StencilWriteMask", stencilWriteMask); 
             // Depth prepass
             collector.AddIntProperty("_StencilRefDepth", stencilRefDepth); // Nothing
-            collector.AddIntProperty("_StencilWriteMaskDepth", stencilWriteMaskDepth); // StencilBeforeTransparent.TraceReflectionRay
+            collector.AddIntProperty("_StencilWriteMaskDepth", stencilWriteMaskDepth); // StencilUsage.TraceReflectionRay
             // Motion vector pass
-            collector.AddIntProperty("_StencilRefMV", stencilRefMV); // StencilBeforeTransparent.ObjectMotionVector
-            collector.AddIntProperty("_StencilWriteMaskMV", stencilWriteMaskMV); // StencilBeforeTransparent.ObjectMotionVector
+            collector.AddIntProperty("_StencilRefMV", stencilRefMV); // StencilUsage.ObjectMotionVector
+            collector.AddIntProperty("_StencilWriteMaskMV", stencilWriteMaskMV); // StencilUsage.ObjectMotionVector
             // Distortion vector pass
-            collector.AddIntProperty("_StencilRefDistortionVec", (int)StencilAfterOpaque.DistortionVectors); 
-            collector.AddIntProperty("_StencilWriteMaskDistortionVec", (int)StencilAfterOpaque.DistortionVectors); 
+            collector.AddIntProperty("_StencilRefDistortionVec", (int)StencilUsage.DistortionVectors); 
+            collector.AddIntProperty("_StencilWriteMaskDistortionVec", (int)StencilUsage.DistortionVectors); 
             // Gbuffer
             collector.AddIntProperty("_StencilWriteMaskGBuffer", stencilWriteMaskGBuffer); 
             collector.AddIntProperty("_StencilRefGBuffer", stencilRefGBuffer); 

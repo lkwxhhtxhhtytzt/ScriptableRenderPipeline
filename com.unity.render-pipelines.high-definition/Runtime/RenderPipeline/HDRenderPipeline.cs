@@ -2840,8 +2840,8 @@ namespace UnityEngine.Rendering.HighDefinition
 
                 var size = new Vector4(hdCamera.actualWidth, hdCamera.actualHeight, 1f / hdCamera.actualWidth, 1f / hdCamera.actualHeight);
                 m_ApplyDistortionMaterial.SetVector(HDShaderIDs._Size, size);
-                m_ApplyDistortionMaterial.SetInt(HDShaderIDs._StencilMask, (int)StencilAfterOpaque.DistortionVectors);
-                m_ApplyDistortionMaterial.SetInt(HDShaderIDs._StencilRef, (int)StencilAfterOpaque.DistortionVectors);
+                m_ApplyDistortionMaterial.SetInt(HDShaderIDs._StencilMask, (int)StencilUsage.DistortionVectors);
+                m_ApplyDistortionMaterial.SetInt(HDShaderIDs._StencilRef, (int)StencilUsage.DistortionVectors);
 
                 HDUtils.DrawFullScreen(cmd, m_ApplyDistortionMaterial, m_CameraColorBuffer, m_SharedRTManager.GetDepthStencilBuffer(), null, 0);
             }
@@ -3163,12 +3163,12 @@ namespace UnityEngine.Rendering.HighDefinition
             switch (hdCamera.frameSettings.litShaderMode)
             {
                 case LitShaderMode.Forward:  // in forward rendering all pixels that decals wrote into have to be composited
-                    parameters.stencilMask = (int)StencilBeforeTransparent.Decals;
-                    parameters.stencilRef = (int)StencilBeforeTransparent.Decals;
+                    parameters.stencilMask = (int)StencilUsage.Decals;
+                    parameters.stencilRef = (int)StencilUsage.Decals;
                     break;
                 case LitShaderMode.Deferred: // in deferred rendering only pixels affected by both forward materials and decals need to be composited
-                    parameters.stencilMask = (int)StencilBeforeTransparent.Decals | (int)StencilBeforeTransparent.RequiresDeferredLighting;
-                    parameters.stencilRef = (int)StencilBeforeTransparent.Decals;
+                    parameters.stencilMask = (int)StencilUsage.Decals | (int)StencilUsage.RequiresDeferredLighting;
+                    parameters.stencilRef = (int)StencilUsage.Decals;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("Unknown ShaderLitMode");
@@ -3633,8 +3633,8 @@ namespace UnityEngine.Rendering.HighDefinition
                 // These flags are still required in SRP or the engine won't compute previous model matrices...
                 // If the flag hasn't been set yet on this camera, motion vectors will skip a frame.
                 hdCamera.camera.depthTextureMode |= DepthTextureMode.MotionVectors | DepthTextureMode.Depth;
-                m_CameraMotionVectorsMaterial.SetInt(HDShaderIDs._StencilMask, (int)StencilBeforeTransparent.ObjectMotionVector);
-                m_CameraMotionVectorsMaterial.SetInt(HDShaderIDs._StencilRef, (int)StencilBeforeTransparent.ObjectMotionVector);
+                m_CameraMotionVectorsMaterial.SetInt(HDShaderIDs._StencilMask, (int)StencilUsage.ObjectMotionVector);
+                m_CameraMotionVectorsMaterial.SetInt(HDShaderIDs._StencilRef, (int)StencilUsage.ObjectMotionVector);
 
                 HDUtils.DrawFullScreen(cmd, m_CameraMotionVectorsMaterial, m_SharedRTManager.GetMotionVectorsBuffer(msaa), m_SharedRTManager.GetDepthStencilBuffer(msaa), null, 0);
 
@@ -3736,7 +3736,7 @@ namespace UnityEngine.Rendering.HighDefinition
                 cmd.SetComputeIntParam(cs, HDShaderIDs._SsrDepthPyramidMaxMip, parameters.depthPyramidMipCount - 1);
                 cmd.SetComputeFloatParam(cs, HDShaderIDs._SsrEdgeFadeRcpLength, parameters.edgeFadeRcpLength);
                 cmd.SetComputeIntParam(cs, HDShaderIDs._SsrReflectsSky, parameters.reflectSky ? 1 : 0);
-                cmd.SetComputeIntParam(cs, HDShaderIDs._SsrStencilBit, (int)StencilBeforeTransparent.TraceReflectionRay);
+                cmd.SetComputeIntParam(cs, HDShaderIDs._SsrStencilBit, (int)StencilUsage.TraceReflectionRay);
 
                 // cmd.SetComputeTextureParam(cs, kernel, "_SsrDebugTexture",    m_SsrDebugTexture);
                 cmd.SetComputeTextureParam(cs, parameters.tracingKernel, HDShaderIDs._CameraDepthTexture, depthPyramid);
@@ -4208,7 +4208,7 @@ namespace UnityEngine.Rendering.HighDefinition
         {
             using (new ProfilingScope(cmd, ProfilingSampler.Get(HDProfileId.ClearStencil)))
             {
-                m_ClearStencilBufferMaterial.SetInt(HDShaderIDs._StencilMask, (int)StencilBeforeTransparent.HDRPReservedBits);
+                m_ClearStencilBufferMaterial.SetInt(HDShaderIDs._StencilMask, (int)StencilUsage.HDRPReservedBits);
                 HDUtils.DrawFullScreen(cmd, m_ClearStencilBufferMaterial, m_CameraColorBuffer, m_SharedRTManager.GetDepthStencilBuffer());
             }
         }
@@ -4273,7 +4273,7 @@ namespace UnityEngine.Rendering.HighDefinition
                     }
                 }
 
-                // We don't need to clear the GBuffers as scene is rewrite and we are suppose to only access valid data (invalid data are tagged with StencilBeforeTransparent.Clear in the stencil),
+                // We don't need to clear the GBuffers as scene is rewrite and we are suppose to only access valid data (invalid data are tagged with StencilUsage.Clear in the stencil),
                 // This is to save some performance
                 if (hdCamera.frameSettings.litShaderMode == LitShaderMode.Deferred)
                 {

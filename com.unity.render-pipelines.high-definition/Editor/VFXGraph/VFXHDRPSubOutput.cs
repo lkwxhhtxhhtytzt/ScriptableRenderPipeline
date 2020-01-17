@@ -82,11 +82,11 @@ namespace UnityEditor.VFX
             stencilWriteMask = 0;
             stencilRef = 0;
 
-            stencilWriteMask |= (int)StencilBeforeTransparent.TraceReflectionRay;
-            stencilRef |= receiveSSR ? (int)StencilBeforeTransparent.TraceReflectionRay : 0;
+            stencilWriteMask |= (int)StencilUsage.TraceReflectionRay;
+            stencilRef |= receiveSSR ? (int)StencilUsage.TraceReflectionRay : 0;
 
-            stencilWriteMask |= useObjectVelocity ? (int)StencilBeforeTransparent.ObjectMotionVector : 0;
-            stencilRef |= useObjectVelocity ? (int)StencilBeforeTransparent.ObjectMotionVector : 0;
+            stencilWriteMask |= useObjectVelocity ? (int)StencilUsage.ObjectMotionVector : 0;
+            stencilRef |= useObjectVelocity ? (int)StencilUsage.ObjectMotionVector : 0;
         }
 
         public override IEnumerable<KeyValuePair<string, VFXShaderWriter>> GetStencilStateOverridesStr()

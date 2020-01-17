@@ -69,14 +69,14 @@ Shader "HDRP/AxF"
 
         // Stencil state
         // Forward
-        [HideInInspector] _StencilRef("_StencilRef", Int) = 0   // StencilBeforeTransparent.Clear
-        [HideInInspector] _StencilWriteMask("_StencilWriteMask", Int) = 3 // StencilBeforeTransparent.RequiresDeferredLighting | StencilBeforeTransparent.SubsurfaceScattering
+        [HideInInspector] _StencilRef("_StencilRef", Int) = 0   // StencilUsage.Clear
+        [HideInInspector] _StencilWriteMask("_StencilWriteMask", Int) = 3 // StencilUsage.RequiresDeferredLighting | StencilUsage.SubsurfaceScattering
         // Depth prepass
         [HideInInspector] _StencilRefDepth("_StencilRefDepth", Int) = 16 // DecalsForwardOutputNormalBuffer
         [HideInInspector] _StencilWriteMaskDepth("_StencilWriteMaskDepth", Int) = 48 // DoesntReceiveSSR | DecalsForwardOutputNormalBuffer
         // Motion vector pass
-        [HideInInspector] _StencilRefMV("_StencilRefMV", Int) = 32 // StencilBeforeTransparent.ObjectMotionVector
-        [HideInInspector] _StencilWriteMaskMV("_StencilWriteMaskMV", Int) = 32 // StencilBeforeTransparent.ObjectMotionVector
+        [HideInInspector] _StencilRefMV("_StencilRefMV", Int) = 32 // StencilUsage.ObjectMotionVector
+        [HideInInspector] _StencilWriteMaskMV("_StencilWriteMaskMV", Int) = 32 // StencilUsage.ObjectMotionVector
 
         // Blending state
         [HideInInspector] _SurfaceType("__surfacetype", Float) = 0.0

@@ -162,23 +162,23 @@ namespace UnityEngine.Rendering.HighDefinition
             if (mat.shader.name.StartsWith("HDRP/"))
             {
                 // Set the reference value for the stencil test.
-                int stencilRef = (int)StencilBeforeTransparent.Clear;
-                int stencilWriteMask = (int)StencilBeforeTransparent.RequiresDeferredLighting | (int)StencilBeforeTransparent.SubsurfaceScattering;
-                int stencilGBufferRef = (int)StencilBeforeTransparent.RequiresDeferredLighting;
-                int stencilGBufferMask = (int)StencilBeforeTransparent.RequiresDeferredLighting | (int)StencilBeforeTransparent.SubsurfaceScattering;
+                int stencilRef = (int)StencilUsage.Clear;
+                int stencilWriteMask = (int)StencilUsage.RequiresDeferredLighting | (int)StencilUsage.SubsurfaceScattering;
+                int stencilGBufferRef = (int)StencilUsage.RequiresDeferredLighting;
+                int stencilGBufferMask = (int)StencilUsage.RequiresDeferredLighting | (int)StencilUsage.SubsurfaceScattering;
 
                 if (mat.HasProperty("_MaterialID") && (int)mat.GetFloat("_MaterialID") == 0) // 0 is MaterialId.LitSSS
                 {
-                    stencilRef = (int)StencilBeforeTransparent.SubsurfaceScattering;
-                    stencilGBufferRef |= (int)StencilBeforeTransparent.SubsurfaceScattering;
+                    stencilRef = (int)StencilUsage.SubsurfaceScattering;
+                    stencilGBufferRef |= (int)StencilUsage.SubsurfaceScattering;
                 }
 
                 if(mat.HasProperty("_ReceivesSSR") && mat.GetInt("_ReceivesSSR") == 1)
                 {
-                    stencilWriteMask |= (int)StencilBeforeTransparent.TraceReflectionRay;
-                    stencilRef |= (int)StencilBeforeTransparent.TraceReflectionRay;
-                    stencilGBufferMask |= (int)StencilBeforeTransparent.TraceReflectionRay;
-                    stencilGBufferRef |= (int)StencilBeforeTransparent.TraceReflectionRay;
+                    stencilWriteMask |= (int)StencilUsage.TraceReflectionRay;
+                    stencilRef |= (int)StencilUsage.TraceReflectionRay;
+                    stencilGBufferMask |= (int)StencilUsage.TraceReflectionRay;
+                    stencilGBufferRef |= (int)StencilUsage.TraceReflectionRay;
 
                 }
 
@@ -187,8 +187,8 @@ namespace UnityEngine.Rendering.HighDefinition
                 mat.SetInt("_StencilWriteMask", stencilWriteMask);
                 mat.SetInt("_StencilRefGBuffer", stencilGBufferRef);
                 mat.SetInt("_StencilWriteMaskGBuffer", stencilGBufferMask);
-                mat.SetInt("_StencilRefMV", (int)StencilBeforeTransparent.ObjectMotionVector);
-                mat.SetInt("_StencilWriteMaskMV", (int)StencilBeforeTransparent.ObjectMotionVector);
+                mat.SetInt("_StencilRefMV", (int)StencilUsage.ObjectMotionVector);
+                mat.SetInt("_StencilWriteMaskMV", (int)StencilUsage.ObjectMotionVector);
             }
         }
 

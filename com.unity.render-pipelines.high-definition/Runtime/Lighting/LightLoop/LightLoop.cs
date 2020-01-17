@@ -786,7 +786,7 @@ namespace UnityEngine.Rendering.HighDefinition
 
             // OUTPUT_SPLIT_LIGHTING - SHADOWS_SHADOWMASK - DEBUG_DISPLAY
             m_deferredLightingMaterial = new Material[8];
-            int stencilMask = (int)StencilBeforeTransparent.RequiresDeferredLighting | (int)StencilBeforeTransparent.SubsurfaceScattering;
+            int stencilMask = (int)StencilUsage.RequiresDeferredLighting | (int)StencilUsage.SubsurfaceScattering;
 
             for (int outputSplitLighting = 0; outputSplitLighting < 2; ++outputSplitLighting)
             {
@@ -802,11 +802,11 @@ namespace UnityEngine.Rendering.HighDefinition
                         CoreUtils.SetKeyword(m_deferredLightingMaterial[index], "SHADOWS_SHADOWMASK", shadowMask == 1);
                         CoreUtils.SetKeyword(m_deferredLightingMaterial[index], "DEBUG_DISPLAY", debugDisplay == 1);
 
-                        int stencilRef = (int)StencilBeforeTransparent.RequiresDeferredLighting;
+                        int stencilRef = (int)StencilUsage.RequiresDeferredLighting;
 
-                        if(outputSplitLighting == 1)
+                        if (outputSplitLighting == 1)
                         {
-                            stencilRef |= (int)StencilBeforeTransparent.SubsurfaceScattering;
+                            stencilRef |= (int)StencilUsage.SubsurfaceScattering;
                         }
 
                         m_deferredLightingMaterial[index].SetInt(HDShaderIDs._StencilMask, stencilMask);
@@ -818,17 +818,17 @@ namespace UnityEngine.Rendering.HighDefinition
 
             // Stencil set to only touch "regular lighting" pixels.
             s_DeferredTileRegularLightingMat = CoreUtils.CreateEngineMaterial(deferredTilePixelShader);
-            s_DeferredTileRegularLightingMat.SetInt(HDShaderIDs._StencilRef, (int)StencilBeforeTransparent.RequiresDeferredLighting);
+            s_DeferredTileRegularLightingMat.SetInt(HDShaderIDs._StencilRef, (int)StencilUsage.RequiresDeferredLighting);
             s_DeferredTileRegularLightingMat.SetInt(HDShaderIDs._StencilCmp, (int)CompareFunction.Equal);
 
             // Stencil set to only touch "split-lighting" pixels.
             s_DeferredTileSplitLightingMat = CoreUtils.CreateEngineMaterial(deferredTilePixelShader);
-            s_DeferredTileSplitLightingMat.SetInt(HDShaderIDs._StencilRef, (int)StencilBeforeTransparent.SubsurfaceScattering);
+            s_DeferredTileSplitLightingMat.SetInt(HDShaderIDs._StencilRef, (int)StencilUsage.SubsurfaceScattering);
             s_DeferredTileSplitLightingMat.SetInt(HDShaderIDs._StencilCmp, (int)CompareFunction.Equal);
 
             // Stencil set to touch all pixels excepted background/sky.
             s_DeferredTileMat = CoreUtils.CreateEngineMaterial(deferredTilePixelShader);
-            s_DeferredTileMat.SetInt(HDShaderIDs._StencilRef, (int)StencilBeforeTransparent.Clear);
+            s_DeferredTileMat.SetInt(HDShaderIDs._StencilRef, (int)StencilUsage.Clear);
             s_DeferredTileMat.SetInt(HDShaderIDs._StencilCmp, (int)CompareFunction.NotEqual);
 
             for (int i = 0; i < LightDefinitions.s_NumFeatureVariants; ++i)
@@ -3661,14 +3661,14 @@ namespace UnityEngine.Rendering.HighDefinition
                 // This is for debug purpose, so fine to use immediate material mode here to modify render state
                 if (!parameters.outputSplitLighting)
                 {
-                    currentLightingMaterial.SetInt(HDShaderIDs._StencilRef, (int)StencilBeforeTransparent.Clear);
-                    currentLightingMaterial.SetInt(HDShaderIDs._StencilMask, (int)StencilBeforeTransparent.RequiresDeferredLighting | (int)StencilBeforeTransparent.SubsurfaceScattering);
+                    currentLightingMaterial.SetInt(HDShaderIDs._StencilRef, (int)StencilUsage.Clear);
+                    currentLightingMaterial.SetInt(HDShaderIDs._StencilMask, (int)StencilUsage.RequiresDeferredLighting | (int)StencilUsage.SubsurfaceScattering);
                     currentLightingMaterial.SetInt(HDShaderIDs._StencilCmp, (int)CompareFunction.NotEqual);
                 }
                 else
                 {
-                    currentLightingMaterial.SetInt(HDShaderIDs._StencilRef, (int)StencilBeforeTransparent.RequiresDeferredLighting);
-                    currentLightingMaterial.SetInt(HDShaderIDs._StencilMask, (int)StencilBeforeTransparent.RequiresDeferredLighting);
+                    currentLightingMaterial.SetInt(HDShaderIDs._StencilRef, (int)StencilUsage.RequiresDeferredLighting);
+                    currentLightingMaterial.SetInt(HDShaderIDs._StencilMask, (int)StencilUsage.RequiresDeferredLighting);
                     currentLightingMaterial.SetInt(HDShaderIDs._StencilCmp, (int)CompareFunction.Equal);
                 }
 

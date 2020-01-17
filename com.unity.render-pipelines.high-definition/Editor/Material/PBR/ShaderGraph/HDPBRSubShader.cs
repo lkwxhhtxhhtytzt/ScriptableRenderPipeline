@@ -319,8 +319,8 @@ namespace UnityEditor.Rendering.HighDefinition
                 "// Stencil setup",
                 "Stencil",
                 "{",
-                string.Format("   WriteMask {0}", (int) StencilBeforeTransparent.RequiresDeferredLighting | (int) StencilBeforeTransparent.SubsurfaceScattering),
-                string.Format("   Ref  {0}", (int)StencilBeforeTransparent.Clear),
+                string.Format("   WriteMask {0}", (int) StencilUsage.RequiresDeferredLighting | (int) StencilUsage.SubsurfaceScattering),
+                string.Format("   Ref  {0}", (int)StencilUsage.Clear),
                 "   Comp Always",
                 "   Pass Replace",
                 "}"
@@ -373,15 +373,15 @@ namespace UnityEditor.Rendering.HighDefinition
         // These functions are still required because for the PBR shader use hardcoded stencil and render queues
         public static void GetStencilStateForGBuffer(bool receiveSSR, bool useSplitLighting, ref Pass pass)
         {
-            int stencilWriteMask = (int)StencilBeforeTransparent.RequiresDeferredLighting | (int)StencilBeforeTransparent.SubsurfaceScattering;
-            int stencilRef = (int)StencilBeforeTransparent.RequiresDeferredLighting;
+            int stencilWriteMask = (int)StencilUsage.RequiresDeferredLighting | (int)StencilUsage.SubsurfaceScattering;
+            int stencilRef = (int)StencilUsage.RequiresDeferredLighting;
             if(useSplitLighting)
             {
-                stencilRef |= (int)StencilBeforeTransparent.SubsurfaceScattering;
+                stencilRef |= (int)StencilUsage.SubsurfaceScattering;
             }
 
-            stencilWriteMask |= (int)StencilBeforeTransparent.TraceReflectionRay;
-            stencilRef |= receiveSSR ? (int)StencilBeforeTransparent.TraceReflectionRay : 0;
+            stencilWriteMask |= (int)StencilUsage.TraceReflectionRay;
+            stencilRef |= receiveSSR ? (int)StencilUsage.TraceReflectionRay : 0;
 
             pass.StencilOverride = new List<string>()
             {
@@ -401,11 +401,11 @@ namespace UnityEditor.Rendering.HighDefinition
             int stencilWriteMask = 0;
             int stencilRef = 0;
 
-            stencilWriteMask |= (int)StencilBeforeTransparent.TraceReflectionRay;
-            stencilRef |= receiveSSR ? (int)StencilBeforeTransparent.TraceReflectionRay : 0;
+            stencilWriteMask |= (int)StencilUsage.TraceReflectionRay;
+            stencilRef |= receiveSSR ? (int)StencilUsage.TraceReflectionRay : 0;
 
-            stencilWriteMask |= useObjectMotionVector ? (int)StencilBeforeTransparent.ObjectMotionVector : 0;
-            stencilRef |= useObjectMotionVector ? (int)StencilBeforeTransparent.ObjectMotionVector : 0;
+            stencilWriteMask |= useObjectMotionVector ? (int)StencilUsage.ObjectMotionVector : 0;
+            stencilRef |= useObjectMotionVector ? (int)StencilUsage.ObjectMotionVector : 0;
 
             if (stencilWriteMask != 0)
             {

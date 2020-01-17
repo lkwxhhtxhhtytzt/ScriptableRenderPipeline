@@ -112,8 +112,8 @@ namespace UnityEditor.Rendering.HighDefinition
             material.SetInt(kStencilWriteMaskGBuffer, stencilWriteMaskGBuffer);
             material.SetInt(kStencilRefMV, stencilRefMV);
             material.SetInt(kStencilWriteMaskMV, stencilWriteMaskMV);
-            material.SetInt(kStencilRefDistortionVec, (int)StencilAfterOpaque.DistortionVectors);
-            material.SetInt(kStencilWriteMaskDistortionVec, (int)StencilAfterOpaque.DistortionVectors);
+            material.SetInt(kStencilRefDistortionVec, (int)StencilUsage.DistortionVectors);
+            material.SetInt(kStencilWriteMaskDistortionVec, (int)StencilUsage.DistortionVectors);
         }
 
         static public void ComputeStencilProperties(bool receivesSSR, bool useSplitLighting, out int stencilRef, out int stencilWriteMask,
@@ -135,31 +135,31 @@ namespace UnityEditor.Rendering.HighDefinition
             // GBuffer: LightingMask, ObjectVelocity
             // Forward: LightingMask
 
-            stencilRef = (int)StencilBeforeTransparent.Clear; // Forward case
-            stencilWriteMask = (int)StencilBeforeTransparent.RequiresDeferredLighting | (int)StencilBeforeTransparent.SubsurfaceScattering;
+            stencilRef = (int)StencilUsage.Clear; // Forward case
+            stencilWriteMask = (int)StencilUsage.RequiresDeferredLighting | (int)StencilUsage.SubsurfaceScattering;
             stencilRefDepth = 0;
             stencilWriteMaskDepth = 0;
-            stencilRefGBuffer = (int)StencilBeforeTransparent.RequiresDeferredLighting;
-            stencilWriteMaskGBuffer = (int)StencilBeforeTransparent.RequiresDeferredLighting | (int)StencilBeforeTransparent.SubsurfaceScattering;
-            stencilRefMV = (int)StencilBeforeTransparent.ObjectMotionVector;
-            stencilWriteMaskMV = (int)StencilBeforeTransparent.ObjectMotionVector;
+            stencilRefGBuffer = (int)StencilUsage.RequiresDeferredLighting;
+            stencilWriteMaskGBuffer = (int)StencilUsage.RequiresDeferredLighting | (int)StencilUsage.SubsurfaceScattering;
+            stencilRefMV = (int)StencilUsage.ObjectMotionVector;
+            stencilWriteMaskMV = (int)StencilUsage.ObjectMotionVector;
 
             if (useSplitLighting)
             {
-                stencilRefGBuffer |= (int)StencilBeforeTransparent.SubsurfaceScattering;
-                stencilRef |= (int)StencilBeforeTransparent.SubsurfaceScattering;
+                stencilRefGBuffer |= (int)StencilUsage.SubsurfaceScattering;
+                stencilRef |= (int)StencilUsage.SubsurfaceScattering;
             }
 
             if (receivesSSR)
             {
-                stencilRefDepth |= (int)StencilBeforeTransparent.TraceReflectionRay;
-                stencilRefGBuffer |= (int)StencilBeforeTransparent.TraceReflectionRay;
-                stencilRefMV |= (int)StencilBeforeTransparent.TraceReflectionRay;
+                stencilRefDepth |= (int)StencilUsage.TraceReflectionRay;
+                stencilRefGBuffer |= (int)StencilUsage.TraceReflectionRay;
+                stencilRefMV |= (int)StencilUsage.TraceReflectionRay;
             }
 
-            stencilWriteMaskDepth |= (int)StencilBeforeTransparent.TraceReflectionRay;
-            stencilWriteMaskGBuffer |= (int)StencilBeforeTransparent.TraceReflectionRay;
-            stencilWriteMaskMV |= (int)StencilBeforeTransparent.TraceReflectionRay;
+            stencilWriteMaskDepth |= (int)StencilUsage.TraceReflectionRay;
+            stencilWriteMaskGBuffer |= (int)StencilUsage.TraceReflectionRay;
+            stencilWriteMaskMV |= (int)StencilUsage.TraceReflectionRay;
         }
 
         static public void SetupBaseLitMaterialPass(Material material)

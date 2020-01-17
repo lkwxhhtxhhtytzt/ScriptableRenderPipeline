@@ -251,7 +251,7 @@ void SubsurfaceScattering(uint2 groupId          : SV_GroupID,
 
     UNITY_BRANCH if (groupThreadId == 0)
     {
-        uint stencilRef = STENCILBEFORETRANSPARENT_SUBSURFACE_SCATTERING;
+        uint stencilRef = STENCILUSAGE_SUBSURFACE_SCATTERING;
 
         // Check whether the thread group needs to perform any work.
         uint s00Address = Get1DAddressFromPixelCoord(2 * groupId.xy + uint2(0, 0), _CoarseStencilBufferSize.xy);

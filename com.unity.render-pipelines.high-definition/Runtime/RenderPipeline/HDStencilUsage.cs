@@ -4,10 +4,13 @@ using UnityEngine;
 
 namespace UnityEngine.Rendering.HighDefinition
 {
+
     [GenerateHLSL]
-    internal enum StencilBeforeTransparent
+    internal enum StencilUsage
     {
         Clear = 0,
+
+        // --- Following bits are used before transparent rendering ---
 
         RequiresDeferredLighting    = (1 << 1),
         SubsurfaceScattering        = (1 << 2),     //  SSS, Split Lighting
@@ -15,31 +18,18 @@ namespace UnityEngine.Rendering.HighDefinition
         Decals                      = (1 << 4),     //  Used for surfaces that receive decals
         ObjectMotionVector          = (1 << 5),     //  Animated object (for motion blur, SSR, SSAO, TAA)
 
-        // User bits
-        UserBit0 = (1 << 6),
-        UserBit1 = (1 << 7),
+        // --- Stencil  is cleared after opaque rendering has finished ---
 
-        // Util value to encompass HDRP reserved bits
-        HDRPReservedBits = 255 & ~(UserBit0 | UserBit1),
-    }
-
-    [GenerateHLSL]
-    internal enum StencilAfterOpaque
-    {
-        Clear = 0,
-
+        // --- Following bits are used exclusively for what happens after opaque ---
         ExcludeFromTAA              = (1 << 1),    // Disable Temporal Antialiasing for certain objects
         DistortionVectors           = (1 << 2),    // Distortion pass - reset after distortion pass, shared with SMAA
         SMAA                        = (1 << 2),    // Subpixel Morphological Antialiasing
-        TraceReflectionRay          = (1 << 3),    // SSR or RTR
+        AfterOpaqueReservedBits     = 0x38,        // Reserved for future usage
 
-        ReservedBits                = 0x38,        // Reserved for future usage
+        // --- Following are user bits, we don't touch them inside HDRP and is up to the user to handle them ---
+        UserBit0 = (1 << 6),
+        UserBit1 = (1 << 7),
 
-        // User bits
-        UserBit0                    = (1 << 6),
-        UserBit1                    = (1 << 7),
-
-        // Util value to encompass HDRP reserved bits
-        HDRPReservedBits            = 255 & ~(UserBit0 | UserBit1),
+        HDRPReservedBits = 255 & ~(UserBit0 | UserBit1),
     }
 }

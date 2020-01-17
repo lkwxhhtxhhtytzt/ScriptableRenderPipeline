@@ -26,12 +26,12 @@ TEXTURE2D_X_UINT2(_StencilTexture);
 RWStructuredBuffer<uint>    _CoarseStencilBuffer;
 
 #ifdef PLATFORM_SUPPORTS_WAVE_INTRINSICS
-    #define FAST_PLATFORM (PLATFORM_LANE_COUNT == 64)
+    #define USE_INTRINSICS (PLATFORM_LANE_COUNT == 64)
 #else
-    #define FAST_PLATFORM 0
+    #define USE_INTRINSICS 0
 #endif
 
-#if FAST_PLATFORM == 0
+#if USE_INTRINSICS == 0
 groupshared uint coarseStencilValue;
 #endif
 
@@ -62,7 +62,7 @@ void KERNEL_NAME(uint3 groupId          : SV_GroupID,
     _OutputStencilBuffer[COORD_TEXTURE2D_X(dispatchThreadID.xy)] = uint2(resolvedStencil, resolvedStencil);
 #endif
 
-#if FAST_PLATFORM == 0
+#if USE_INTRINSICS == 0
 
     bool isFirstThread = groupThreadId.x == 0 && groupThreadId.y == 0;
     if (isFirstThread)

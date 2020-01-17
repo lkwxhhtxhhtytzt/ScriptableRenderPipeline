@@ -82,21 +82,21 @@ namespace UnityEditor.Rendering.HighDefinition
             // GBuffer: RequiresDeferredLighting, SubsurfaceScattering, ObjectMotionVectors
             // Forward: SubsurfaceScattering
 
-            int stencilRef = (int)StencilBeforeTransparent.Clear;
-            int stencilWriteMask = (int)StencilBeforeTransparent.RequiresDeferredLighting | (int)StencilBeforeTransparent.SubsurfaceScattering;
+            int stencilRef = (int)StencilUsage.Clear;
+            int stencilWriteMask = (int)StencilUsage.RequiresDeferredLighting | (int)StencilUsage.SubsurfaceScattering;
             int stencilRefDepth = 0;
             int stencilWriteMaskDepth = 0;
-            int stencilRefMV = (int)StencilBeforeTransparent.ObjectMotionVector;
-            int stencilWriteMaskMV = (int)StencilBeforeTransparent.ObjectMotionVector;
+            int stencilRefMV = (int)StencilUsage.ObjectMotionVector;
+            int stencilWriteMaskMV = (int)StencilUsage.ObjectMotionVector;
 
             if (ssrEnabled)
             {
-                stencilRefDepth |= (int)StencilBeforeTransparent.TraceReflectionRay;
-                stencilRefMV |= (int)StencilBeforeTransparent.TraceReflectionRay;
+                stencilRefDepth |= (int)StencilUsage.TraceReflectionRay;
+                stencilRefMV |= (int)StencilUsage.TraceReflectionRay;
             }
 
-            stencilWriteMaskDepth |= (int)StencilBeforeTransparent.TraceReflectionRay;
-            stencilWriteMaskMV |= (int)StencilBeforeTransparent.TraceReflectionRay;
+            stencilWriteMaskDepth |= (int)StencilUsage.TraceReflectionRay;
+            stencilWriteMaskMV |= (int)StencilUsage.TraceReflectionRay;
 
             // As we tag both during motion vector pass and Gbuffer pass we need a separate state and we need to use the write mask
             material.SetInt(kStencilRef, stencilRef);

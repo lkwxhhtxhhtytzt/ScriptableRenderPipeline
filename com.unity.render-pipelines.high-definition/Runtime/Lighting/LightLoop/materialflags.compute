@@ -63,9 +63,9 @@ void MATERIALFLAGSGEN(uint3 dispatchThreadId : SV_DispatchThreadID, uint threadI
         int idx = i * NR_THREADS + threadID;
         uint2 uCrd = min(uint2(viTilLL.x + (idx & 0xf), viTilLL.y + (idx >> 4)), uint2(iWidth - 1, iHeight - 1));
         
-        // Unlit object, sky/background and forward opaque tag don't tag the StencilBeforeTransparent.RequiresDeferredLighting bit
+        // Unlit object, sky/background and forward opaque tag don't tag the StencilUsage.RequiresDeferredLighting bit
         uint stencilVal = GetStencilValue(LOAD_TEXTURE2D_X(_StencilTexture, uCrd));
-        if ((stencilVal & STENCILBEFORETRANSPARENT_REQUIRES_DEFERRED_LIGHTING) > 0) 
+        if ((stencilVal & STENCILUSAGE_REQUIRES_DEFERRED_LIGHTING) > 0)
         {
             PositionInputs posInput = GetPositionInput(uCrd, invScreenSize);
             materialFeatureFlags |= MATERIAL_FEATURE_FLAGS_FROM_GBUFFER(posInput.positionSS);
