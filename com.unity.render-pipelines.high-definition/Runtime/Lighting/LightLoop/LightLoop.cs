@@ -3662,11 +3662,13 @@ namespace UnityEngine.Rendering.HighDefinition
                 if (!parameters.outputSplitLighting)
                 {
                     currentLightingMaterial.SetInt(HDShaderIDs._StencilRef, (int)StencilBeforeTransparent.Clear);
+                    currentLightingMaterial.SetInt(HDShaderIDs._StencilMask, (int)StencilBeforeTransparent.RequiresDeferredLighting | (int)StencilBeforeTransparent.SubsurfaceScattering);
                     currentLightingMaterial.SetInt(HDShaderIDs._StencilCmp, (int)CompareFunction.NotEqual);
                 }
                 else
                 {
                     currentLightingMaterial.SetInt(HDShaderIDs._StencilRef, (int)StencilBeforeTransparent.RequiresDeferredLighting);
+                    currentLightingMaterial.SetInt(HDShaderIDs._StencilMask, (int)StencilBeforeTransparent.RequiresDeferredLighting);
                     currentLightingMaterial.SetInt(HDShaderIDs._StencilCmp, (int)CompareFunction.Equal);
                 }
 

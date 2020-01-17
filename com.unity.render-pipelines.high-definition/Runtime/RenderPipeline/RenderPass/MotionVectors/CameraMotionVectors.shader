@@ -9,7 +9,6 @@ Shader "Hidden/HDRP/CameraMotionVectors"
     HLSLINCLUDE
 
         #pragma target 4.5
-        #pragma enable_d3d11_debug_symbols
 
         #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
         #include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
