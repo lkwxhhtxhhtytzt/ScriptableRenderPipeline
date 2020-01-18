@@ -4,7 +4,7 @@ All notable changes to this package are documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [7.1.8]
+## [Unreleased]
 ### Fixed
 - Fixed a number of memory leaks causing Shader Graph assets to stay in memory after closing the Shader Graph window.
 
