@@ -20,7 +20,9 @@ namespace UnityEditor.ShaderGraph
 
             var list = s_Pool.Pop();
             list.m_Active = true;
+#if DEBUG
             GC.ReRegisterForFinalize(list);
+#endif
             return list;
         }
 
@@ -30,7 +32,9 @@ namespace UnityEditor.ShaderGraph
             m_Active = false;
             Clear();
             s_Pool.Push(this);
+#if DEBUG
             GC.SuppressFinalize(this);
+#endif
         }
 
 // Destructor causes some GC alloc so only do this sanity check in debug build
