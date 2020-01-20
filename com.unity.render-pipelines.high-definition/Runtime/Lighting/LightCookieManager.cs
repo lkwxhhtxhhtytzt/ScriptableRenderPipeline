@@ -55,7 +55,7 @@ namespace UnityEngine.Rendering.HighDefinition
 
             int cookieCubeSize = gLightLoopSettings.cubeCookieTexArraySize;
             int cookieAtlasSize = (int)gLightLoopSettings.cookieAtlasSize;
-            cookieFormat = (GraphicsFormat)gLightLoopSettings.cookieAtlasFormat;
+            cookieFormat = (GraphicsFormat)gLightLoopSettings.cookieFormat;
             cookieAtlasLastValidMip = gLightLoopSettings.cookieAtlasLastValidMip;
 
             if (PowerOfTwoTextureAtlas.GetApproxCacheSizeInByte(1, cookieAtlasSize, true, cookieFormat) > HDRenderPipeline.k_MaxCacheSize)
@@ -71,7 +71,7 @@ namespace UnityEngine.Rendering.HighDefinition
                 cookieCubeSize = TextureCacheCubemap.GetMaxCacheSizeForWeightInByte(HDRenderPipeline.k_MaxCacheSize, cookieCubeResolution, 1);
 
             // For now the cubemap cookie array format is hardcoded to R8G8B8A8 SRGB.
-            m_CubeCookieTexArray.AllocTextureArray(cookieCubeSize, cookieCubeResolution, GraphicsFormat.R8G8B8A8_SRGB, true, m_CubeToPanoMaterial);
+            m_CubeCookieTexArray.AllocTextureArray(cookieCubeSize, cookieCubeResolution, cookieFormat, true, m_CubeToPanoMaterial);
         }
 
         public void NewFrame()
@@ -118,6 +118,8 @@ namespace UnityEngine.Rendering.HighDefinition
                 return null;
             }
 
+            // TODO: we don't need to allocate two temp RT, we can use the atlas as temp render texture
+            // it will avoid additional copy of the whole mip chain into the atlas.
             int sourceWidth = m_CookieAtlas.AtlasTexture.rt.width;
             int sourceHeight = m_CookieAtlas.AtlasTexture.rt.height;
             int mipMapCount = 1 + Mathf.FloorToInt(Mathf.Log(Mathf.Max(source.width, source.height), 2));

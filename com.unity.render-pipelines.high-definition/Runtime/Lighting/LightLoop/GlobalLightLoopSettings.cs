@@ -111,12 +111,17 @@ namespace UnityEngine.Rendering.HighDefinition
         public static GlobalLightLoopSettings NewDefault() => new GlobalLightLoopSettings()
         {
             cookieAtlasSize = CookieAtlasResolution.CookieResolution2048,
-            cookieAtlasFormat = CookieAtlasGraphicsFormat.R11G11B10,
+            cookieFormat = CookieAtlasGraphicsFormat.R11G11B10,
             pointCookieSize = CubeCookieResolution.CubeCookieResolution128,
             cubeCookieTexArraySize = 16,
 
             cookieAtlasLastValidMip = 0,
             cookieAreaTextureArraySize = 16,
+
+// We must keep this value for migration purpose (when we create a new HDRP asset it is migrated to the last version)
+#pragma warning disable 618 // Type or member is obsolete
+            cookieTexArraySize = 1,
+#pragma warning restore 618
 
             planarReflectionAtlasSize = PlanarReflectionAtlasResolution.PlanarReflectionResolution1024,
             reflectionProbeCacheSize = 64,
@@ -135,9 +140,13 @@ namespace UnityEngine.Rendering.HighDefinition
 
         [FormerlySerializedAs("cookieSize")]
         public CookieAtlasResolution cookieAtlasSize;
-        public CookieAtlasGraphicsFormat cookieAtlasFormat;
+        public CookieAtlasGraphicsFormat cookieFormat;
         public CubeCookieResolution pointCookieSize;
         public int cubeCookieTexArraySize;
+
+        // We keep this property for the migration code (we need to know how many cookies we could have before).
+        [Obsolete("There is no more texture array for cookies, use cookie atlases properties instead.")]
+        public int cookieTexArraySize;
 
         public int cookieAtlasLastValidMip;
         public int cookieAreaTextureArraySize;

@@ -838,7 +838,10 @@ namespace UnityEngine.Rendering.HighDefinition
 
             list.Add(new DebugUI.FloatField { displayName = "Debug Overlay Screen Ratio", getter = () => data.debugOverlayRatio, setter = v => data.debugOverlayRatio = v, min = () => 0.1f, max = () => 1f});
             
-            if (DebugNeedsExposure() || data.lightingDebugSettings.displaySkyReflection || data.lightingDebugSettings.displayPlanarReflectionProbeAtlas || data.lightingDebugSettings.displayCookieAtlas)
+            if (DebugNeedsExposure() || data.lightingDebugSettings.displaySkyReflection
+                    || data.lightingDebugSettings.displayPlanarReflectionProbeAtlas
+                    || data.lightingDebugSettings.displayCookieAtlas
+                    || data.lightingDebugSettings.displayCookieCubeArray)
                 list.Add(new DebugUI.FloatField { displayName = "Debug Exposure", getter = () => data.lightingDebugSettings.debugExposure, setter = value => data.lightingDebugSettings.debugExposure = value });
 
             m_DebugLightingItems = list.ToArray();

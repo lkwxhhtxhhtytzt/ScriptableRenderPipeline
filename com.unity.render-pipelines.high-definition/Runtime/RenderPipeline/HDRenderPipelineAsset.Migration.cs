@@ -20,6 +20,7 @@ namespace UnityEngine.Rendering.HighDefinition
             ScalableSettingsRefactor,
             ShadowFilteringVeryHighQualityRemoval,
             SeparateColorGradingAndTonemappingFrameSettings,
+            ReplaceTextureArraysByAtlasForCookieAndPlanar,
         }
 
         static readonly MigrationDescription<Version, HDRenderPipelineAsset> k_Migration = MigrationDescription.New(
@@ -78,6 +79,21 @@ namespace UnityEngine.Rendering.HighDefinition
             MigrationStep.New(Version.SeparateColorGradingAndTonemappingFrameSettings, (HDRenderPipelineAsset data) =>
             {
                 FrameSettings.MigrateToSeparateColorGradingAndTonemapping(ref data.m_RenderingPathDefaultCameraFrameSettings);
+            }),
+            MigrationStep.New(Version.ReplaceTextureArraysByAtlasForCookieAndPlanar, (HDRenderPipelineAsset data) => 
+            {
+                ref var lightLoopSettings = ref data.m_RenderPipelineSettings.lightLoopSettings;
+
+#pragma warning disable 618 // Type or member is obsolete
+                int size = (int)lightLoopSettings.cookieAtlasSize * lightLoopSettings.cookieTexArraySize;
+#pragma warning restore 618
+
+                // The atlas only supports power of two sizes
+                size = Mathf.ClosestPowerOfTwo(size);
+                // Clamp to avoid too large atlases
+                size = Mathf.Clamp(size, (int)CookieAtlasResolution.CookieResolution256, (int)CookieAtlasResolution.CookieResolution8192);
+
+                lightLoopSettings.cookieAtlasSize = (CookieAtlasResolution)size;
             })
         );
 
