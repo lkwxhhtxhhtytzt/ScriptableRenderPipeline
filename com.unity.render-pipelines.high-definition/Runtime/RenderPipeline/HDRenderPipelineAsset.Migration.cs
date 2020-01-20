@@ -85,15 +85,19 @@ namespace UnityEngine.Rendering.HighDefinition
                 ref var lightLoopSettings = ref data.m_RenderPipelineSettings.lightLoopSettings;
 
 #pragma warning disable 618 // Type or member is obsolete
-                int size = (int)lightLoopSettings.cookieAtlasSize * lightLoopSettings.cookieTexArraySize;
+                int cookieAtlasSize = (int)lightLoopSettings.cookieAtlasSize * lightLoopSettings.cookieTexArraySize;
 #pragma warning restore 618
+                int planarSize = (int)lightLoopSettings.planarReflectionAtlasSize * lightLoopSettings.maxPlanarReflectionOnScreen;
 
                 // The atlas only supports power of two sizes
-                size = Mathf.ClosestPowerOfTwo(size);
+                cookieAtlasSize = Mathf.ClosestPowerOfTwo(cookieAtlasSize);
+                planarSize = Mathf.ClosestPowerOfTwo(planarSize);
                 // Clamp to avoid too large atlases
-                size = Mathf.Clamp(size, (int)CookieAtlasResolution.CookieResolution256, (int)CookieAtlasResolution.CookieResolution8192);
+                cookieAtlasSize = Mathf.Clamp(cookieAtlasSize, (int)CookieAtlasResolution.CookieResolution256, (int)CookieAtlasResolution.CookieResolution8192);
+                planarSize = Mathf.Clamp(planarSize, (int)PlanarReflectionAtlasResolution.PlanarReflectionResolution256, (int)PlanarReflectionAtlasResolution.PlanarReflectionResolution8192);
 
-                lightLoopSettings.cookieAtlasSize = (CookieAtlasResolution)size;
+                lightLoopSettings.cookieAtlasSize = (CookieAtlasResolution)cookieAtlasSize;
+                lightLoopSettings.planarReflectionAtlasSize = (PlanarReflectionAtlasResolution)planarSize;
             })
         );
 
