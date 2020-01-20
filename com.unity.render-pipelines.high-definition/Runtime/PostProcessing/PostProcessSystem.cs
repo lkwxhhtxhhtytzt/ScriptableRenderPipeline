@@ -437,6 +437,28 @@ namespace UnityEngine.Rendering.HighDefinition
                     using (new ProfilingSample(cmd, "Dynamic Exposure", CustomSamplerId.Exposure.GetSampler()))
                     {
                         DoDynamicExposure(cmd, camera, source, lightingBuffer);
+
+                        // On reset history we need to apply dynamic exposure immediately to avoid
+                        // white or black screen flashes when the current exposure isn't anywhere
+                        // near 0
+                        if (m_ResetHistory)
+                        {
+                            var destination = m_Pool.Get(Vector2.one, k_ColorFormat);
+
+                            var cs = m_Resources.shaders.applyExposureCS;
+                            int kernel = cs.FindKernel("KMain");
+
+                            // Note: we call GetPrevious instead of GetCurrent because the textures
+                            // are swapped internally as the system expects the texture will be used
+                            // on the next frame. So the actual "current" for this frame is in
+                            // "previous".
+                            cmd.SetComputeTextureParam(cs, kernel, HDShaderIDs._ExposureTexture, GetPreviousExposureTexture(camera));
+                            cmd.SetComputeTextureParam(cs, kernel, HDShaderIDs._InputTexture, source);
+                            cmd.SetComputeTextureParam(cs, kernel, HDShaderIDs._OutputTexture, destination);
+                            cmd.DispatchCompute(cs, kernel, (camera.actualWidth + 7) / 8, (camera.actualHeight + 7) / 8, camera.viewCount);
+
+                            PoolSource(ref source, destination);
+                        }
                     }
                 }
 
