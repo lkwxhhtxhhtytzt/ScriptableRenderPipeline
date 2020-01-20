@@ -19,6 +19,8 @@ namespace UnityEditor.Rendering.HighDefinition
 
     class MaterialReimporter : Editor
     {
+        internal static bool s_NeedsSavingAssets = false;
+
         [InitializeOnLoadMethod]
         static void ReimportAllMaterials()
         {
@@ -46,11 +48,18 @@ namespace UnityEditor.Rendering.HighDefinition
                     "Your current High Definition Render Pipeline requires a change that will update your Materials. In order to apply this update automatically, you need to save your Project. If you choose not to save your Project, you will need to re-import Materials manually, then save the Project.\n\nPlease note that downgrading from the High Definition Render Pipeline is not supported.",
                     "Save Project", "Not now")))
                 {
-                    AssetDatabase.SaveAssets();
-
+                    s_NeedsSavingAssets = true;
                     //to prevent data loss, only update the saved version if user applied change
                     HDProjectSettings.packageVersionForMaterialUpgrade = hdrpVersion;
                 }
+                else
+                {
+                    s_NeedsSavingAssets = false;
+                }
+            }
+            else
+            {
+                s_NeedsSavingAssets = false;
             }
         }
     }
@@ -58,7 +67,19 @@ namespace UnityEditor.Rendering.HighDefinition
     class MaterialPostprocessor : AssetPostprocessor
     {
         internal static List<string> s_CreatedAssets = new List<string>();
+        internal static List<string> s_ImportedAssetThatNeedSaving = new List<string>();
 
+        static void SaveAssetsToDisk()
+        {
+            foreach (var asset in MaterialPostprocessor.s_ImportedAssetThatNeedSaving)
+            {
+                AssetDatabase.MakeEditable(asset);
+            }
+
+            AssetDatabase.SaveAssets();
+
+            MaterialPostprocessor.s_ImportedAssetThatNeedSaving.Clear();
+        }
         static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
         {
             foreach (var asset in importedAssets)
@@ -118,8 +139,17 @@ namespace UnityEditor.Rendering.HighDefinition
                 }
 
                 if (wasUpgraded)
+                {
                     EditorUtility.SetDirty(assetVersion);
+                    s_ImportedAssetThatNeedSaving.Add(asset);
+                }
             }
+
+            EditorApplication.update += () =>
+            {
+                if (Time.renderedFrameCount > 0 && MaterialReimporter.s_NeedsSavingAssets)
+                    SaveAssetsToDisk();
+            };
         }
 
         // Note: It is not possible to separate migration step by kind of shader
@@ -173,7 +203,7 @@ namespace UnityEditor.Rendering.HighDefinition
 
         static void StencilRefactor(Material material, HDShaderUtils.ShaderID id)
         {
-            if (id < HDShaderUtils.ShaderID.Count_Standard)
+            if (id < HDShaderUtils.ShaderID.Count_All)
             {
                     var serializedObject = new SerializedObject(material);
                     serializedObject.ApplyModifiedProperties();
